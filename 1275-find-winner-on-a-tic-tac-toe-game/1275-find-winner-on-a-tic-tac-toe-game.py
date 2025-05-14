@@ -1,21 +1,32 @@
+from typing import List
 
 class Solution:
     def tictactoe(self, moves: List[List[int]]) -> str:
+        # Grid size
         n = 3
-        rows, columns = [0] * n, [0] * n
-        d1, d2 = 0, 0
-        player = 1  # A = 1, B = -1
+        # Create a board with empty strings
+        board = [[''] * n for _ in range(n)]
 
-        for r, c in moves:
-            rows[r] += player
-            columns[c] += player
-            if r == c:
-                d1 += player
-            if r + c == n - 1:
-                d2 += player
-            # Corrected variable name: columns instead of cols
-            if abs(rows[r]) == n or abs(columns[c]) == n or abs(d1) == n or abs(d2) == n:
-                return "A" if player == 1 else "B"
-            player *= -1
+        # Players turn: even index → A, odd index → B
+        for i, (r, c) in enumerate(moves):
+            board[r][c] = 'X' if i % 2 == 0 else 'O'
 
-        return "Draw" if len(moves) == n * n else "Pending"
+        # Function to check if someone has won
+        def check_winner(symbol):
+            # Check rows, columns, and diagonals
+            for i in range(n):
+                if all(board[i][j] == symbol for j in range(n)): return True
+                if all(board[j][i] == symbol for j in range(n)): return True
+            if all(board[i][i] == symbol for i in range(n)): return True
+            if all(board[i][n - 1 - i] == symbol for i in range(n)): return True
+            return False
+
+        # Check for winner
+        if check_winner('X'):
+            return "A"
+        elif check_winner('O'):
+            return "B"
+        elif len(moves) == n * n:
+            return "Draw"
+        else:
+            return "Pending"
