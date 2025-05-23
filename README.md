@@ -1,1 +1,1 @@
-This is daily Leecode challange
+This is daily Leetcode challange
